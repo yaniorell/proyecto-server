@@ -1,0 +1,7 @@
+.env
+mail/maildata/
+mail/state/
+mail/config/
+ftp/data/
+streaming/data/
+

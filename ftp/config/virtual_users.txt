@@ -1,0 +1,2 @@
+ftpuser
+ftpsecurepwd123

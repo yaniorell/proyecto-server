@@ -1,0 +1,116 @@
+lversion: '3.8'
+
+services:
+  web:
+    image: nginx:alpine
+    container_name: proyectoserver-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT}:80"
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+      - ./web/default.conf:/etc/nginx/conf.d/default.conf:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - web-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 128M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  ftp:
+    image: fauria/vsftpd
+    container_name: proyectoserver-ftp
+    restart: unless-stopped
+    ports:
+      - "${FTP_PORT}:21"
+      - "${FTP_PASV_MIN_PORT}-${FTP_PASV_MAX_PORT}:${FTP_PASV_MIN_PORT}-${FTP_PASV_MAX_PORT}"
+    environment:
+      - FTP_USER=${FTP_USER}
+      - FTP_PASS=${FTP_PASS}
+      - PASV_ADDRESS=${FTP_PASV_ADDRESS}
+      - PASV_MIN_PORT=${FTP_PASV_MIN_PORT}
+      - PASV_MAX_PORT=${FTP_PASV_MAX_PORT}
+    volumes:
+      - ./ftp/data:/home/vsftpd
+    networks:
+      - ftp-net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  streaming:
+    image: tiangolo/nginx-rtmp
+    container_name: proyectoserver-streaming
+    restart: unless-stopped
+    ports:
+      - "${STREAMING_PORT}:1935"
+    volumes:
+      - ./streaming/data:/opt/data
+    networks:
+      - streaming-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mail:
+    image: mailserver/docker-mailserver:latest
+    container_name: proyectoserver-mail
+    hostname: ${MAIL_HOSTNAME}
+    domainname: ${MAIL_DOMAIN}
+    restart: unless-stopped
+    ports:
+      - "${MAIL_PORT_SMTP}:25"
+      - "${MAIL_PORT_IMAP}:143"
+    environment:
+      - ONE_DIR=1
+      - ENABLE_SPAMASSASSIN=0
+      - ENABLE_CLAMAV=0
+      - ENABLE_FAIL2BAN=1
+    volumes:
+      - ./mail/maildata:/var/mail
+      - ./mail/state:/var/mail-state
+      - ./mail/config:/tmp/docker-mailserver
+    networks:
+      - mail-net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 1024M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  web-net:
+    driver: bridge
+  ftp-net:
+    driver: bridge
+  streaming-net:
+    driver: bridge
+  mail-net:
+    driver: bridge
