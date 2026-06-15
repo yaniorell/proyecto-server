@@ -1,4 +1,4 @@
-PROYECTO SERVER 
+*PROYECTO SERVER*
 
 SERVICIOS 
  -Web
@@ -10,4 +10,3 @@ TECNOLOGIAS
  -Ubuntu Server
  -Docker
  -Docker Compose
-
