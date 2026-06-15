@@ -18,7 +18,7 @@ Para gestionar los servicios desde tu máquina local, utiliza las siguientes con
 
 | Servicio  | Puerto | Protocolo | Herramienta recomendada |
 | --------- | ------ | --------- | ----------------------- |
-| Web       | 80     | HTTP      | Navegador Web           |
+| Web       | 8888     | HTTP      | Navegador Web           |
 | FTP       | 21     | FTP       | FileZilla / WinSCP      |
 | Streaming | 1935   | RTMP      | OBS Studio              |
 | Dashboard | 8089   | HTTP      | Navegador Web           |
