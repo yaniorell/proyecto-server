@@ -652,4 +652,4 @@ def api_restart():
 if __name__ == '__main__':
     print("🚀 Infrastructure Control Panel running on http://localhost:5000")
     print("⚙️  Auto-refresh enabled: every 10 seconds")
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=8089, debug=False)
